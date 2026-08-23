@@ -1,0 +1,23 @@
+{
+  "name": "yutrixa",
+  "version": "1.0.0",
+  "description": "Yutrixa - AI Solutions | Automation | Digital Growth. Business website with appointment booking and AI chatbot.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^9.0.5"
+  },
+  "devDependencies": {
+    "wrangler": "^4.125.0"
+  }
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact | Yutrixa</title>
+<meta name="description" content="Get in touch with Yutrixa to discuss AI, automation, web development or a custom digital project." />
+<meta property="og:title" content="Contact | Yutrixa" />
+<meta property="og:description" content="Tell us what you're trying to improve, automate or build." />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a href="/" class="logo"><span class="logo-mark">Y</span> Yutrixa</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/services">Services</a>
+      <a href="/work">Work</a>
+      <a href="/about">About</a>
+      <a href="/careers">Careers</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="/book" class="btn btn-primary btn-sm">Book a Consultation</a>
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav">
+    <a href="/">Home</a>
+    <a href="/services">Services</a>
+    <a href="/work">Work</a>
+    <a href="/about">About</a>
+    <a href="/careers">Careers</a>
+    <a href="/contact">Contact</a>
+    <a href="/book" class="btn btn-primary btn-block">Book a Consultation</a>
+  </div>
+</header>
+
+<main>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="eyebrow">Contact</div>
+    <h1>Let's Talk About Your Project</h1>
+    <p>Tell us what you're trying to improve, automate or build, and we'll follow up with next steps.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width:760px;">
+    <div class="form-card">
+      <div class="notice notice-success" id="contactNotice" hidden></div>
+      <form id="contactForm">
+        <div class="form-grid">
+          <div class="field"><label for="fName">Name</label><input id="fName" name="name" required /></div>
+          <div class="field"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" required /></div>
+          <div class="field"><label for="fPhone">Phone</label><input id="fPhone" name="phone" type="tel" /></div>
+          <div class="field"><label for="fCompany">Company</label><input id="fCompany" name="company" /></div>
+          <div class="field">
+            <label for="fService">Service</label>
+            <select id="fService" name="service">
+              <option value="">Select a service...</option>
+              <option>AI Agents</option>
+              <option>AI Automation</option>
+              <option>Workflow Automation</option>
+              <option>Web Development</option>
+              <option>Email Marketing</option>
+              <option>Social Media Management</option>
+              <option>LinkedIn Management</option>
+              <option>E-commerce Solutions</option>
+              <option>Business Process Automation</option>
+              <option>Custom Digital Solutions</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fBudget">Budget</label>
+            <select id="fBudget" name="budget">
+              <option value="">Select a range...</option>
+              <option>Under $1,000</option>
+              <option>$1,000 – $5,000</option>
+              <option>$5,000 – $15,000</option>
+              <option>$15,000+</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="fMessage">Message</label><textarea id="fMessage" name="message" rows="5" required placeholder="Tell us about your project or challenge..."></textarea></div>
+        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Yutrixa</div>
+        <p>AI Solutions | Automation | Digital Growth</p>
+        <a href="https://www.linkedin.com/company/yutrixa" target="_blank" rel="noopener" class="social-link" aria-label="Yutrixa on LinkedIn">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="color:white;"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.24 8.75h4.5V23h-4.5V8.75zM8.5 8.75h4.31v1.95h.06c.6-1.14 2.07-2.34 4.26-2.34 4.55 0 5.39 3 5.39 6.9V23h-4.5v-6.9c0-1.65-.03-3.77-2.3-3.77-2.3 0-2.65 1.8-2.65 3.65V23h-4.5V8.75z"/></svg>
+        </a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/work">Work</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/careers">Careers</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get Started</h4>
+        <ul>
+          <li><a href="/book">Book a Consultation</a></li>
+          <li><a href="/privacy.html">Privacy Policy</a></li>
+          <li><a href="/terms.html">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Yutrixa. All rights reserved.</span>
+      <span>Built with AI, automation and a lot of care.</span>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="/js/main.js"></script>
+<script src="/js/contact.js"></script>
+<script src="/js/chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin | Yutrixa</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a href="/" class="logo"><span class="logo-mark">Y</span> Yutrixa</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/services">Services</a>
+      <a href="/work">Work</a>
+      <a href="/about">About</a>
+      <a href="/careers">Careers</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="/book" class="btn btn-primary btn-sm">Book a Consultation</a>
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav">
+    <a href="/">Home</a>
+    <a href="/services">Services</a>
+    <a href="/work">Work</a>
+    <a href="/about">About</a>
+    <a href="/careers">Careers</a>
+    <a href="/contact">Contact</a>
+    <a href="/book" class="btn btn-primary btn-block">Book a Consultation</a>
+  </div>
+</header>
+
+<main>
+<section class="section">
+  <div class="container">
+
+    <!-- LOGIN VIEW -->
+    <div id="loginView" class="admin-login">
+      <div class="form-card">
+        <h2 class="text-center">Admin Login</h2>
+        <p class="text-center small">Enter the admin password to view appointments.</p>
+        <div class="notice notice-error" id="loginError" hidden></div>
+        <form id="loginForm">
+          <div class="field">
+            <label for="adminPassword">Password</label>
+            <input id="adminPassword" name="password" type="password" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Log In</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboardView" hidden>
+      <div class="admin-topbar">
+        <div>
+          <div class="eyebrow">Admin</div>
+          <h1 style="margin-bottom:0;">Appointments</h1>
+        </div>
+        <button class="btn btn-outline btn-sm" id="logoutBtn">Log Out</button>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box"><div class="num" id="statToday">0</div><div class="label">Today's Appointments</div></div>
+        <div class="stat-box"><div class="num" id="statUpcoming">0</div><div class="label">Upcoming Appointments</div></div>
+        <div class="stat-box"><div class="num" id="statTotal">0</div><div class="label">Total (All Time)</div></div>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="today">Today</button>
+        <button class="admin-tab" data-tab="upcoming">Upcoming</button>
+        <button class="admin-tab" data-tab="all">All</button>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Service</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentsBody"></tbody>
+        </table>
+      </div>
+      <p class="small text-center" id="emptyState" style="margin-top:24px;" hidden>No appointments in this view yet.</p>
+    </div>
+
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Yutrixa. Admin Panel.</span>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="/js/main.js"></script>
+<script>
+(function () {
+  const loginView = document.getElementById('loginView');
+  const dashboardView = document.getElementById('dashboardView');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const tabs = document.querySelectorAll('.admin-tab');
+  const tbody = document.getElementById('appointmentsBody');
+  const emptyState = document.getElementById('emptyState');
+
+  let adminPassword = sessionStorage.getItem('yutrixa_admin_pw') || '';
+  let allAppointments = [];
+  let currentTab = 'today';
+
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  async function tryLoad() {
+    if (!adminPassword) return showLogin();
+    const res = await fetch('/api/appointments', { headers: { 'x-admin-password': adminPassword } });
+    if (res.status === 401) {
+      sessionStorage.removeItem('yutrixa_admin_pw');
+      adminPassword = '';
+      return showLogin();
+    }
+    const data = await res.json();
+    allAppointments = data.appointments || [];
+    showDashboard();
+    renderStats();
+    renderTable();
+  }
+
+  function showLogin() {
+    loginView.hidden = false;
+    dashboardView.hidden = true;
+  }
+  function showDashboard() {
+    loginView.hidden = true;
+    dashboardView.hidden = false;
+  }
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.hidden = true;
+    const password = document.getElementById('adminPassword').value;
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      adminPassword = password;
+      sessionStorage.setItem('yutrixa_admin_pw', password);
+      tryLoad();
+    } else {
+      loginError.hidden = false;
+      loginError.textContent = data.error || 'Incorrect password.';
+    }
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    sessionStorage.removeItem('yutrixa_admin_pw');
+    adminPassword = '';
+    showLogin();
+  });
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentTab = tab.dataset.tab;
+      renderTable();
+    });
+  });
+
+  function renderStats() {
+    const today = todayStr();
+    document.getElementById('statToday').textContent = allAppointments.filter((a) => a.date === today && a.status !== 'cancelled').length;
+    document.getElementById('statUpcoming').textContent = allAppointments.filter((a) => a.date >= today && a.status !== 'cancelled').length;
+    document.getElementById('statTotal').textContent = allAppointments.length;
+  }
+
+  function renderTable() {
+    const today = todayStr();
+    let list = [...allAppointments];
+    if (currentTab === 'today') list = list.filter((a) => a.date === today);
+    if (currentTab === 'upcoming') list = list.filter((a) => a.date >= today);
+    list.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+
+    tbody.innerHTML = '';
+    emptyState.hidden = list.length > 0;
+
+    list.forEach((appt) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHTML(appt.name)}</td>
+        <td>${escapeHTML(appt.email)}</td>
+        <td>${escapeHTML(appt.phone)}</td>
+        <td>${escapeHTML(appt.service)}</td>
+        <td>${escapeHTML(appt.date)}</td>
+        <td>${escapeHTML(appt.time)}</td>
+        <td><span class="status-pill status-${appt.status === 'cancelled' ? 'cancelled' : 'confirmed'}">${appt.status}</span></td>
+        <td class="admin-actions">
+          ${appt.status !== 'cancelled' ? `<button class="btn btn-outline btn-sm" data-cancel="${appt.id}">Cancel</button>` : ''}
+          <button class="btn btn-sm" style="background:#fdeef0;color:#c0294f;" data-delete="${appt.id}">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('[data-cancel]').forEach((btn) => {
+      btn.addEventListener('click', () => cancelAppointment(btn.dataset.cancel));
+    });
+    tbody.querySelectorAll('[data-delete]').forEach((btn) => {
+      btn.addEventListener('click', () => deleteAppointment(btn.dataset.delete));
+    });
+  }
+
+  async function cancelAppointment(id) {
+    if (!confirm('Cancel this appointment?')) return;
+    await fetch(`/api/appointments/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+      body: JSON.stringify({ status: 'cancelled' })
+    });
+    tryLoad();
+  }
+
+  async function deleteAppointment(id) {
+    if (!confirm('Permanently delete this appointment?')) return;
+    await fetch(`/api/appointments/${id}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-password': adminPassword }
+    });
+    tryLoad();
+  }
+
+  function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  tryLoad();
+})();
+</script>
+</body>
+</html>
