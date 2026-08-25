@@ -332,6 +332,17 @@ app.post('/api/careers', (req, res) => {
   res.status(201).json({ success: true, message: 'Thanks for your interest — we will review your details and be in touch.' });
 });
 
+// Admin only: list all careers applications
+app.get('/api/careers', requireAdmin, (req, res) => {
+  const applications = readJSON(FILES.careers).sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  res.json({
+    success: true,
+    applications
+  });
+});
 /* ----------------------------------------------------------------------- */
 /* AI Chatbot API - Gemini with local fallback                             */
 /* ----------------------------------------------------------------------- */

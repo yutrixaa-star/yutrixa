@@ -99,6 +99,37 @@
         </table>
       </div>
       <p class="small text-center" id="emptyState" style="margin-top:24px;" hidden>No appointments in this view yet.</p>
+
+      <hr style="margin:48px 0;">
+
+      <div class="admin-topbar">
+        <div>
+          <div class="eyebrow">Applications</div>
+          <h2>Careers Applications</h2>
+        </div>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Skill</th>
+              <th>Experience</th>
+              <th>LinkedIn</th>
+              <th>Portfolio</th>
+              <th>Resume</th>
+              <th>Message</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="careersBody"></tbody>
+        </table>
+      </div>
+
+      <p class="small text-center" id="careersEmptyState" style="margin-top:24px;" hidden>No career applications yet.</p>
     </div>
 
   </div>
@@ -125,6 +156,8 @@
   const tabs = document.querySelectorAll('.admin-tab');
   const tbody = document.getElementById('appointmentsBody');
   const emptyState = document.getElementById('emptyState');
+  const careersBody = document.getElementById('careersBody');
+  const careersEmptyState = document.getElementById('careersEmptyState');
 
   let adminPassword = sessionStorage.getItem('yutrixa_admin_pw') || '';
   let allAppointments = [];
@@ -145,6 +178,20 @@
     }
     const data = await res.json();
     allAppointments = data.appointments || [];
+
+    const careersRes = await fetch('/api/careers', {
+      headers: { 'x-admin-password': adminPassword }
+    });
+
+    if (careersRes.status === 401) {
+      sessionStorage.removeItem('yutrixa_admin_pw');
+      adminPassword = '';
+      return showLogin();
+    }
+
+    const careersData = await careersRes.json();
+    renderCareers(careersData.applications || []);
+
     showDashboard();
     renderStats();
     renderTable();
@@ -254,6 +301,30 @@
       headers: { 'x-admin-password': adminPassword }
     });
     tryLoad();
+  }
+
+  function renderCareers(applications) {
+    careersBody.innerHTML = '';
+    careersEmptyState.hidden = applications.length > 0;
+
+    applications.forEach((app) => {
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td>${escapeHTML(app.name)}</td>
+        <td>${escapeHTML(app.email)}</td>
+        <td>${escapeHTML(app.role)}</td>
+        <td>${escapeHTML(app.primarySkill)}</td>
+        <td>${escapeHTML(app.experience)}</td>
+        <td>${escapeHTML(app.linkedin)}</td>
+        <td>${escapeHTML(app.portfolio)}</td>
+        <td>${escapeHTML(app.resume)}</td>
+        <td>${escapeHTML(app.message)}</td>
+        <td>${escapeHTML(app.createdAt)}</td>
+      `;
+
+      careersBody.appendChild(tr);
+    });
   }
 
   function escapeHTML(str) {
