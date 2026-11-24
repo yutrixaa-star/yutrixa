@@ -10,13 +10,23 @@
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
-  .sample-demo select { display:block; width:100%; padding:.65rem; border:1px solid #8291aa; border-radius:.5rem; color:inherit; background:transparent; }
+  .sample-demo form { margin-block-end:.75rem; }
+  .sample-demo select, .sample-demo input:not([type=checkbox]) {
+    display:block; width:100%; padding:.65rem; margin-block-end:.75rem; border:1px solid #8291aa;
+    border-radius:.5rem; color:inherit; background:transparent; font:inherit;
+  }
   .sample-demo option { color:#17233a; background:#fff; }
   .sample-demo label { display:block; margin-bottom:.35rem; font-weight:600; }
-  .sample-actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
-  .sample-actions [hidden] { display:none; }
-  .sample-result:not(:empty) { border-inline-start:3px solid #657fde; padding-inline-start:.75rem; margin-top:.85rem; }
-  .sample-result:empty, .sample-audio-status:empty { margin:0; }
+  .sample-demo fieldset { border:1px solid #8291aa; border-radius:.5rem; padding:.65rem; margin-block-end:.75rem; }
+  .sample-demo button[hidden] { display:none; }
+  .sample-demo button:disabled { opacity:.55; cursor:default; }
+  .demo-output:not(:empty) { border-inline-start:3px solid #657fde; padding-inline-start:.75rem; margin-block:.65rem; overflow-wrap:anywhere; }
+  .demo-output:empty, .sample-demo p:empty { margin:0; }
+  #chat-log { max-height:12rem; overflow:auto; }
+  #chat-log p { margin:.3rem 0; }
+  .demo-cart, .demo-review { padding-inline-start:1.2rem; margin-block:.45rem; }
+  .demo-cart li, .demo-review li { margin-block:.3rem; }
+  .demo-cart button { margin-inline-start:.3rem; }
   .sample-example summary { cursor:pointer; font-weight:600; }
   .sample-example p { margin-top:.5rem; }
 </style>
@@ -66,89 +76,88 @@
   <div class="container">
     <div class="section-header">
       <h2 id="sample-heading">Try Our Sample Projects</h2>
-      <p>Choose a scenario to see how each solution could work. These browser demos use fictional data and simulated integrations.</p>
+      <p>Try these working browser demos with fictional data. The chat and voice replies follow preset rules, and CRM records and orders stay in this page.</p>
     </div>
     <div class="card-grid grid-3">
       <article class="card work-card sample-demo">
         <span class="demo-cat">WhatsApp &amp; CRM</span>
         <h3>WhatsApp Inquiry Assistant</h3>
-        <p>Try a chat flow that answers a question and prepares a CRM handoff.</p>
-        <label for="sample-0">Choose a customer message</label>
-        <select id="sample-0">
-          <option data-response="Yes, we install split AC units. What city are you in, and when would you like the installation?">Do you install air conditioners?</option>
-          <option data-response="Sample CRM record created: AC installation · Sagar · Saturday requested · Assigned to Service Sales.">Sagar, this Saturday</option>
-          <option data-response="This is an existing booking. The conversation is routed to customer support instead of creating a new sales lead.">I need to change an existing booking</option>
-        </select>
-        <div class="sample-actions">
-          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
-        </div>
-        <p class="sample-result" role="status"></p>
+        <p>Send a message to the sample inbox and see how a service inquiry becomes a CRM lead.</p>
+        <form id="chat-demo">
+          <div class="demo-output" id="chat-log" role="log" aria-label="Sample conversation"><p><strong>Assistant</strong> Hi! Ask me about AC installation, pricing, or an existing booking.</p></div>
+          <label for="demo-message">Your message</label>
+          <input id="demo-message" name="message" required maxlength="120" placeholder="e.g. I need AC installation" autocomplete="off">
+          <button class="btn btn-outline btn-sm">Send message</button>
+        </form>
+        <p class="demo-output" id="crm-preview" role="status">CRM preview: No lead yet.</p>
       </article>
 
       <article class="card work-card sample-demo">
         <span class="demo-cat">Voice AI</span>
         <h3>Hindi &amp; Hinglish Voice Assistant</h3>
-        <p>Explore sample call responses and hear them when Hindi speech is available on your device.</p>
-        <label for="sample-1">Choose a caller request</label>
-        <select id="sample-1">
-          <option data-response="नमस्ते! क्लिनिक सोमवार से शनिवार, सुबह दस से शाम छह बजे तक खुला है।">पूछें कि क्लिनिक कब खुलता है</option>
-          <option data-response="शनिवार सुबह ग्यारह बजे एक स्लॉट है। क्या आप इस समय का अपॉइंटमेंट लेना चाहेंगे?">शनिवार की अपॉइंटमेंट पूछें</option>
-          <option data-response="ठीक है, मैं आपको रिसेप्शन टीम से कनेक्ट कर रही हूँ।">Ask to speak to reception</option>
-        </select>
-        <div class="sample-actions">
-          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
-          <button class="btn btn-outline btn-sm" type="button" data-listen-demo hidden>Play reply</button>
-        </div>
-        <p class="sample-result" role="status" lang="hi"></p>
-        <p class="sample-audio-status" role="status"></p>
+        <p>Type a question in Hindi or Hinglish, then hear the reply on devices with a Hindi voice.</p>
+        <form id="voice-demo">
+          <label for="demo-question">Your question</label>
+          <input id="demo-question" name="question" required maxlength="120" placeholder="e.g. Saturday appointment milega?">
+          <button class="btn btn-outline btn-sm">Ask assistant</button>
+          <button class="btn btn-outline btn-sm" type="button" id="speak-demo" hidden>Play reply</button>
+        </form>
+        <p class="demo-output" id="voice-reply" role="status" lang="hi"></p>
+        <p id="voice-status" role="status"></p>
       </article>
 
       <article class="card work-card sample-demo">
         <span class="demo-cat">Workflow Automation</span>
         <h3>Lead Routing &amp; Follow-Up</h3>
-        <p>See how an n8n-style workflow could route new inquiries and queue follow-ups.</p>
-        <label for="sample-2">Choose a sample inquiry</label>
-        <select id="sample-2">
-          <option data-response="Website form → CRM lead created → Web team assigned → Follow-up task due tomorrow.">New website project</option>
-          <option data-response="Website form → Matched existing customer → Support ticket opened → Support team notified.">Existing customer needs help</option>
-          <option data-response="Website form → Duplicate matched → New message attached to existing lead → One follow-up task kept.">Repeat inquiry for the same project</option>
-        </select>
-        <div class="sample-actions">
-          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
-        </div>
-        <p class="sample-result" role="status"></p>
+        <p>Submit two inquiries with the same company and request to see how the workflow handles duplicates.</p>
+        <form id="workflow-demo">
+          <label for="demo-company">Sample company</label>
+          <input id="demo-company" name="company" required maxlength="60" placeholder="e.g. Demo Studio">
+          <label for="demo-request">Request</label>
+          <select id="demo-request" name="request">
+            <option value="website">Build a website</option>
+            <option value="automation">Automate a process</option>
+            <option value="support">Get help with an existing project</option>
+          </select>
+          <button class="btn btn-outline btn-sm">Run workflow</button>
+        </form>
+        <p class="demo-output" id="workflow-result" role="status">No inquiries processed yet.</p>
       </article>
 
       <article class="card work-card sample-demo">
         <span class="demo-cat">Web Development</span>
         <h3>Online Store &amp; Checkout</h3>
-        <p>Walk through product selection and a sample order confirmation.</p>
-        <label for="sample-3">Choose a store action</label>
-        <select id="sample-3">
-          <option data-response="Sample catalog: Desk Lamp · ₹1,499 | Notebook Set · ₹399 | Cable Organizer · ₹299.">Browse the catalog</option>
-          <option data-response="Cart: 1 × Desk Lamp at ₹1,499. Standard delivery: ₹99. Order total: ₹1,598.">Add a Desk Lamp to the cart</option>
-          <option data-response="Sample order #DEMO-104 · 1 Desk Lamp · ₹1,598 total. This preview uses mock checkout data.">Preview checkout</option>
-        </select>
-        <div class="sample-actions">
-          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
-        </div>
-        <p class="sample-result" role="status"></p>
+        <p>Add products, adjust quantities, and place a sample order.</p>
+        <form id="store-demo">
+          <label for="demo-product">Product</label>
+          <select id="demo-product" name="product">
+            <option value="lamp">Desk Lamp · ₹1,499</option>
+            <option value="notebook">Notebook Set · ₹399</option>
+            <option value="cable">Cable Organizer · ₹299</option>
+          </select>
+          <button class="btn btn-outline btn-sm">Add to cart</button>
+        </form>
+        <ul class="demo-cart" id="demo-cart" aria-label="Cart items"></ul>
+        <p class="demo-output" id="cart-total" role="status">Your cart is empty.</p>
+        <button class="btn btn-outline btn-sm" id="demo-checkout" type="button" disabled>Place sample order</button>
+        <p id="order-result" role="status"></p>
       </article>
 
       <article class="card work-card sample-demo">
         <span class="demo-cat">Security Review</span>
-        <h3>Sample Security Review Report</h3>
-        <p>Explore how a website review could turn observations into a prioritized remediation plan.</p>
-        <label for="sample-4">Choose an example finding</label>
-        <select id="sample-4">
-          <option data-response="High priority · Require multi-factor authentication for administrator accounts and review recovery access.">Administrator account protection</option>
-          <option data-response="Medium priority · Remove stale staff accounts and verify that active users have the access they need.">Access review</option>
-          <option data-response="Assign each finding to an owner, agree on a due date, and record the result when the fix is verified.">Remediation tracking</option>
-        </select>
-        <div class="sample-actions">
-          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
-        </div>
-        <p class="sample-result" role="status"></p>
+        <h3>Website Security Review</h3>
+        <p>Choose which safeguards a fictional website uses to generate a prioritized review.</p>
+        <form id="review-demo">
+          <fieldset>
+            <legend>Safeguards in place</legend>
+            <label><input type="checkbox" name="https"> HTTPS on all pages</label>
+            <label><input type="checkbox" name="mfa"> Multi-factor authentication for admins</label>
+            <label><input type="checkbox" name="accounts"> Regular staff account reviews</label>
+            <label><input type="checkbox" name="backups"> Tested backup restores</label>
+          </fieldset>
+          <button class="btn btn-outline btn-sm">Generate review</button>
+        </form>
+        <ul class="demo-review" id="review-result" aria-live="polite"></ul>
       </article>
     </div>
   </div>
@@ -298,48 +307,161 @@
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
-document.querySelectorAll('.sample-demo').forEach((demo) => {
-  const scenario = demo.querySelector('select');
-  const result = demo.querySelector('.sample-result');
-  const play = demo.querySelector('[data-listen-demo]');
-  const audioStatus = demo.querySelector('.sample-audio-status');
+const byId = (id) => document.getElementById(id);
 
-  demo.querySelector('[data-run-demo]').addEventListener('click', () => {
-    result.textContent = scenario.selectedOptions[0].dataset.response;
-    if (play) {
-      play.hidden = false;
-      audioStatus.textContent = '';
-    }
+function onDemoSubmit(id, run) {
+  byId(id).addEventListener('submit', (event) => {
+    event.preventDefault();
+    run(new FormData(event.currentTarget));
   });
+}
 
-  if (!play) return;
+function addChatMessage(sender, message) {
+  const log = byId('chat-log');
+  const line = document.createElement('p');
+  const label = document.createElement('strong');
+  label.textContent = sender;
+  line.append(label, ' ' + message);
+  log.append(line);
+  log.scrollTop = log.scrollHeight;
+}
 
-  scenario.addEventListener('change', () => {
-    result.textContent = '';
-    audioStatus.textContent = '';
-    play.hidden = true;
-    window.speechSynthesis?.cancel();
-  });
+let collectingCity = false;
+onDemoSubmit('chat-demo', (data) => {
+  const message = data.get('message').trim();
+  if (!message) return;
+  addChatMessage('You', message);
+  let reply;
+  if (/existing|reschedul|cancel|change.*booking/i.test(message)) {
+    collectingCity = false;
+    reply = 'I would route your booking question to Customer Support.';
+  } else if (/price|cost|how much|rate/i.test(message)) {
+    reply = 'Sample installation starts at ₹1,499. Final pricing depends on the site and materials.';
+  } else if (collectingCity) {
+    byId('crm-preview').textContent = 'CRM lead created · AC installation · City: ' + message + ' · Owner: Service Sales';
+    collectingCity = false;
+    reply = 'Thanks. I’ve prepared a sample lead for the Service Sales team.';
+  } else if (/install|air conditioner|split ac/i.test(message)) {
+    collectingCity = true;
+    reply = 'We install split AC units. Which city are you in?';
+  } else {
+    reply = 'I can help with AC installation, pricing, or changes to an existing booking.';
+  }
+  addChatMessage('Assistant', reply);
+  byId('demo-message').value = '';
+});
 
-  play.addEventListener('click', () => {
-    const speech = window.speechSynthesis;
-    const voice = speech?.getVoices().find((candidate) => /^hi(?:-|$)/i.test(candidate.lang));
-    if (!voice) {
-      audioStatus.textContent = 'Hindi audio is unavailable in this browser. You can read the sample reply above.';
-      return;
-    }
+const speech = window.speechSynthesis;
+onDemoSubmit('voice-demo', (data) => {
+  const question = data.get('question').trim();
+  if (!question) return;
+  speech?.cancel();
+  byId('voice-status').textContent = '';
+  const replies = [
+    [/appointment|book|slot|अपॉइंटमेंट|बुक|शनिवार/i, 'शनिवार सुबह ग्यारह बजे एक स्लॉट उपलब्ध है।'],
+    [/open|time|hours|kab|खुल|समय|कब/i, 'क्लिनिक सोमवार से शनिवार, सुबह दस बजे से शाम छह बजे तक खुला रहता है।'],
+    [/reception|human|staff|रिसेप्शन|बात/i, 'ज़रूर। इस स्थिति में मैं आपको रिसेप्शन टीम से जोड़ दूँगी।']
+  ];
+  byId('voice-reply').textContent = replies.find(([pattern]) => pattern.test(question))?.[1]
+    ?? 'आप क्लिनिक के समय, अपॉइंटमेंट या रिसेप्शन से बात करने के बारे में पूछ सकते हैं।';
+  byId('speak-demo').hidden = false;
+});
 
-    speech.cancel();
-    audioStatus.textContent = '';
-    const reply = new SpeechSynthesisUtterance(result.textContent);
-    reply.voice = voice;
-    reply.lang = voice.lang;
-    reply.onerror = (event) => {
-      if (event.error === 'interrupted' || event.error === 'canceled') return;
-      audioStatus.textContent = 'Audio could not play. You can read the sample reply above.';
-    };
-    speech.speak(reply);
-  });
+byId('speak-demo').addEventListener('click', () => {
+  const status = byId('voice-status');
+  const voice = speech?.getVoices().find((candidate) => /^hi(?:-|$)/i.test(candidate.lang));
+  if (!voice) {
+    status.textContent = 'Hindi audio is unavailable on this device. The reply is shown above.';
+    return;
+  }
+  speech.cancel();
+  status.textContent = '';
+  const reply = new SpeechSynthesisUtterance(byId('voice-reply').textContent);
+  reply.voice = voice;
+  reply.lang = voice.lang;
+  reply.onerror = ({error}) => {
+    if (error !== 'interrupted' && error !== 'canceled') status.textContent = 'Audio could not play. The reply is shown above.';
+  };
+  speech.speak(reply);
+});
+
+const inquiries = new Map();
+const routing = {
+  website: 'CRM lead created · Web team assigned · Follow-up task queued',
+  automation: 'CRM lead created · Automation team assigned · Follow-up task queued',
+  support: 'Support ticket opened · Customer Support assigned'
+};
+onDemoSubmit('workflow-demo', (data) => {
+  const company = data.get('company').trim();
+  if (!company) return;
+  const request = data.get('request');
+  const key = JSON.stringify([company.toLowerCase().replace(/\s+/g, ' '), request]);
+  if (inquiries.has(key)) {
+    byId('workflow-result').textContent = company + ' · Duplicate matched · Added to record #' + inquiries.get(key);
+    return;
+  }
+  const record = inquiries.size + 1;
+  inquiries.set(key, record);
+  byId('workflow-result').textContent = company + ' · Record #' + record + ' · ' + routing[request];
+});
+
+const catalog = {lamp: ['Desk Lamp', 1499], notebook: ['Notebook Set', 399], cable: ['Cable Organizer', 299]};
+const cart = new Map();
+const currency = new Intl.NumberFormat('en-IN', {style: 'currency', currency: 'INR', maximumFractionDigits: 0});
+let orderNumber = 100;
+const cartTotal = () => [...cart].reduce((sum, [id, qty]) => sum + catalog[id][1] * qty, 0);
+function renderCart() {
+  const list = byId('demo-cart');
+  list.replaceChildren();
+  for (const [id, qty] of cart) {
+    const [name, price] = catalog[id];
+    const row = document.createElement('li');
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.textContent = 'Remove one';
+    remove.setAttribute('aria-label', 'Remove one ' + name);
+    remove.addEventListener('click', () => {
+      if (qty === 1) cart.delete(id);
+      else cart.set(id, qty - 1);
+      renderCart();
+      (list.querySelector('[aria-label="' + remove.getAttribute('aria-label') + '"]') ?? byId('demo-product')).focus();
+    });
+    row.append(qty + ' × ' + name + ' · ' + currency.format(qty * price), remove);
+    list.append(row);
+  }
+  byId('cart-total').textContent = cart.size ? 'Total: ' + currency.format(cartTotal()) : 'Your cart is empty.';
+  byId('demo-checkout').disabled = !cart.size;
+}
+
+onDemoSubmit('store-demo', (data) => {
+  const id = data.get('product');
+  cart.set(id, (cart.get(id) ?? 0) + 1);
+  byId('order-result').textContent = '';
+  renderCart();
+});
+byId('demo-checkout').addEventListener('click', () => {
+  if (!cart.size) return;
+  byId('order-result').textContent = 'Sample order DEMO-' + (++orderNumber) + ' confirmed · ' + currency.format(cartTotal());
+  cart.clear();
+  renderCart();
+  byId('demo-product').focus();
+});
+
+onDemoSubmit('review-demo', (data) => {
+  const safeguards = [
+    ['https', 'High · Enable HTTPS across the site.'],
+    ['mfa', 'High · Require multi-factor authentication for administrator accounts.'],
+    ['accounts', 'Medium · Review staff access and remove stale accounts.'],
+    ['backups', 'Medium · Test that backups can be restored.']
+  ];
+  const findings = safeguards.filter(([key]) => !data.has(key)).map(([, action]) => action);
+  const report = byId('review-result');
+  report.replaceChildren();
+  for (const finding of findings.length ? findings : ['All four safeguards are marked as present.']) {
+    const item = document.createElement('li');
+    item.textContent = finding;
+    report.append(item);
+  }
 });
 </script>
 <script src="/js/main.js"></script>
