@@ -10,6 +10,12 @@
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
+  .featured-work { display:grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap:clamp(1rem, 4vw, 3rem); align-items:start; }
+  .featured-work-flow { border-inline-start:3px solid #657fde; padding-inline-start:1rem; }
+  .featured-work-flow ol { padding-inline-start:1.35rem; margin-block:.75rem 0; }
+  .featured-work-flow li + li { margin-block-start:.6rem; }
+  .featured-work .featured-work-note { font-size:.9rem; margin-block:.75rem 0; }
+  @media (max-width: 720px) { .featured-work { grid-template-columns:minmax(0, 1fr); } }
   .sample-demo form { margin-block-end:.75rem; }
   .sample-demo select, .sample-demo input:not([type=checkbox]) {
     display:block; width:100%; padding:.65rem; margin-block-end:.75rem; border:1px solid #8291aa;
@@ -69,6 +75,29 @@
     <div class="eyebrow">Portfolio</div>
     <h1>See What We Can Build</h1>
     <p>Explore sample projects for AI assistants, workflow automation, web development, and security reviews.</p>
+  </div>
+</section>
+
+
+<section class="section section-alt" aria-labelledby="featured-work-heading">
+  <div class="container">
+    <article class="card featured-work">
+      <div>
+        <div class="eyebrow">Live project · Built for Yutrixa</div>
+        <h2 id="featured-work-heading">Our Consultation Booking Assistant</h2>
+        <p>We built this for our own website so visitors can choose a service and find a consultation time without emailing back and forth.</p>
+        <a href="/book" class="btn btn-primary">Try the Live Booking Flow</a>
+        <p class="featured-work-note">You can explore services and available times before entering your details or confirming an appointment.</p>
+      </div>
+      <div class="featured-work-flow">
+        <h3>What you can try</h3>
+        <ol>
+          <li><strong>Choose a service.</strong> The chat guides you to the calendar.</li>
+          <li><strong>Pick a date.</strong> See available time slots for that day.</li>
+          <li><strong>Review your selection.</strong> A booking is created when you submit your details and confirm.</li>
+        </ol>
+      </div>
+    </article>
   </div>
 </section>
 
