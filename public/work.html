@@ -10,6 +10,23 @@
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
+  #whatsapp-assistant { scroll-margin-top:5rem; }
+  .wa-console { min-width:0; border-radius:1.2rem; overflow:hidden; border:1px solid #b6d6c8; background:#eef7f2; box-shadow:0 12px 28px #143d291f; }
+  .wa-header { display:flex; align-items:center; gap:.8rem; padding:.8rem 1rem; background:#133e36; color:white; }
+  .wa-header small { display:block; color:#cff3e1; }
+  .wa-avatar { display:grid; place-items:center; width:2.35rem; height:2.35rem; border-radius:.65rem; background:#acf1cc; color:#133e36; font-weight:800; }
+  #chat-log.wa-log { display:flex; flex-direction:column; gap:.55rem; height:13rem; max-height:none; overflow:auto; padding:.85rem; background:radial-gradient(#b9d9ca 1px,transparent 1px) 0 0 / 14px 14px, #eef7f2; }
+  #chat-log .wa-message { align-self:start; max-width:88%; margin:0; padding:.48rem .7rem; background:white; color:#173a30; border-radius:.75rem .75rem .75rem .2rem; overflow-wrap:anywhere; }
+  #chat-log .wa-message-user { align-self:end; background:#c3efda; border-radius:.75rem .75rem .2rem .75rem; }
+  .wa-message strong { display:block; font-size:.72rem; }
+  .wa-actions, .wa-composer { display:flex; gap:.45rem; padding:.55rem .75rem; }
+  .wa-actions { flex-wrap:wrap; }
+  .wa-actions button { background:white; color:#134f3a; border:1px solid #a6d3c0; border-radius:.5rem; padding:.35rem .55rem; }
+  .wa-composer { background:white; }
+  .wa-composer input { min-width:0; flex:1; padding:.48rem .65rem; border:1px solid #9abbb0; border-radius:.5rem; }
+  .wa-composer button { color:white; background:#156549; border:0; border-radius:.5rem; padding:.45rem .65rem; font-weight:700; }
+  .wa-crm { margin:.9rem 0 0; padding:.65rem .8rem; border-inline-start:3px solid #16805b; background:#eef7f2; border-radius:.35rem; overflow-wrap:anywhere; }
+
   .support-demo { display:grid; grid-template-columns:minmax(0, .8fr) minmax(0, 1.2fr); gap:clamp(1rem,4vw,3rem); align-items:center; padding:clamp(1rem,4vw,2.5rem); margin-bottom:1.5rem; border:1px solid #dce7f9; border-radius:1.5rem; background:#fff; box-shadow:0 10px 28px #17376312; scroll-margin-top:5rem; }
   .support-demo h3 { font-size:clamp(1.7rem,3vw,2.45rem); }
   .support-console { min-width:0; border:1px solid #dce7f9; border-radius:1rem; overflow:hidden; background:#f3f7ff; }
@@ -137,6 +154,7 @@
     <h1 id="portfolio-title">See what we build.<br><span>Try it yourself.</span></h1>
     <p>Explore our live booking assistant and try hands-on demos for customer support, automation, ecommerce, and more.</p>
     <a href="#featured-project" class="btn btn-primary">See the Live Project</a>
+    <a href="#whatsapp-assistant" class="portfolio-hero-link">Try WhatsApp Auto-Replies</a>
     <a href="#interactive-demos" class="portfolio-hero-link">Explore the Demos <span aria-hidden="true">↓</span></a>
   </div>
 </section>
@@ -173,6 +191,38 @@
   </div>
 </section>
 
+<section class="portfolio-spotlight" id="whatsapp-assistant" aria-labelledby="whatsapp-title">
+  <div class="container">
+    <article class="featured-work">
+      <div class="featured-work-copy">
+        <div class="eyebrow">Interactive demo · WhatsApp &amp; CRM</div>
+        <h2 id="whatsapp-title">WhatsApp Auto-Message Assistant</h2>
+        <p>See how a business can reply to inquiries automatically, collect a customer’s city, and prepare a lead for the sales team.</p>
+        <p class="featured-work-note">This demo runs on the page using sample data. Try the installation inquiry to see a lead created.</p>
+        <p class="wa-crm" id="crm-preview" role="status">CRM preview · No lead yet</p>
+      </div>
+      <div class="wa-console">
+        <div class="wa-header">
+          <span class="wa-avatar" aria-hidden="true">Y</span>
+          <div><strong>Yutrixa Service Desk</strong><small>Demo conversation</small></div>
+        </div>
+        <div id="chat-log" class="wa-log" role="log" aria-label="Sample WhatsApp conversation">
+          <p class="wa-message">Hi! Ask me about AC installation, pricing, or an existing booking.</p>
+        </div>
+        <div class="wa-actions" aria-label="Suggested messages">
+          <button type="button" data-wa-message="I need AC installation">Installation</button>
+          <button type="button" data-wa-message="How much does it cost?">Pricing</button>
+          <button type="button" data-wa-message="Change an existing booking">Change booking</button>
+        </div>
+        <form id="chat-demo" class="wa-composer">
+          <input id="demo-message" name="message" aria-label="Message to the service desk" required maxlength="120" placeholder="Type a message" autocomplete="off">
+          <button type="submit">Send <span aria-hidden="true">↗</span></button>
+        </form>
+      </div>
+    </article>
+  </div>
+</section>
+
 <section class="section" id="interactive-demos" aria-labelledby="sample-heading">
   <div class="container">
     <div class="section-header">
@@ -203,19 +253,6 @@
       </div>
     </article>
     <div class="portfolio-demos">
-      <article class="card work-card sample-demo">
-        <span class="demo-cat">WhatsApp &amp; CRM</span>
-        <h3>WhatsApp Inquiry Assistant</h3>
-        <p>Send a message to the sample inbox and see how a service inquiry becomes a CRM lead.</p>
-        <form id="chat-demo">
-          <div class="demo-output" id="chat-log" role="log" aria-label="Sample conversation"><p><strong>Assistant</strong> Hi! Ask me about AC installation, pricing, or an existing booking.</p></div>
-          <label for="demo-message">Your message</label>
-          <input id="demo-message" name="message" required maxlength="120" placeholder="e.g. I need AC installation" autocomplete="off">
-          <button class="btn btn-outline btn-sm">Send message</button>
-        </form>
-        <p class="demo-output" id="crm-preview" role="status">CRM preview: No lead yet.</p>
-      </article>
-
       <article class="card work-card sample-demo">
         <span class="demo-cat">Voice AI</span>
         <h3>Hindi &amp; Hinglish Voice Assistant</h3>
@@ -442,14 +479,15 @@ function addChatMessage(sender, message) {
   const line = document.createElement('p');
   const label = document.createElement('strong');
   label.textContent = sender;
+  line.className = sender === 'You' ? 'wa-message wa-message-user' : 'wa-message';
   line.append(label, ' ' + message);
   log.append(line);
   log.scrollTop = log.scrollHeight;
 }
 
 let collectingCity = false;
-onDemoSubmit('chat-demo', (data) => {
-  const message = data.get('message').trim();
+function sendWhatsAppDemoMessage(rawMessage) {
+  const message = rawMessage.trim();
   if (!message) return;
   addChatMessage('You', message);
   let reply;
@@ -469,7 +507,14 @@ onDemoSubmit('chat-demo', (data) => {
     reply = 'I can help with AC installation, pricing, or changes to an existing booking.';
   }
   addChatMessage('Assistant', reply);
+}
+
+onDemoSubmit('chat-demo', (data) => {
+  sendWhatsAppDemoMessage(data.get('message'));
   byId('demo-message').value = '';
+});
+document.querySelectorAll('[data-wa-message]').forEach((button) => {
+  button.addEventListener('click', () => sendWhatsAppDemoMessage(button.dataset.waMessage));
 });
 
 const speech = window.speechSynthesis;
