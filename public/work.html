@@ -9,6 +9,17 @@
 <meta property="og:description" content="Demo prototypes showing what Yutrixa can build with AI, automation and web development." />
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 <link rel="stylesheet" href="/css/style.css" />
+<style>
+  .sample-demo select { display:block; width:100%; padding:.65rem; border:1px solid #8291aa; border-radius:.5rem; color:inherit; background:transparent; }
+  .sample-demo option { color:#17233a; background:#fff; }
+  .sample-demo label { display:block; margin-bottom:.35rem; font-weight:600; }
+  .sample-actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
+  .sample-actions [hidden] { display:none; }
+  .sample-result:not(:empty) { border-inline-start:3px solid #657fde; padding-inline-start:.75rem; margin-top:.85rem; }
+  .sample-result:empty, .sample-audio-status:empty { margin:0; }
+  .sample-example summary { cursor:pointer; font-weight:600; }
+  .sample-example p { margin-top:.5rem; }
+</style>
 </head>
 <body>
 
@@ -47,12 +58,105 @@
   <div class="container">
     <div class="eyebrow">Portfolio</div>
     <h1>See What We Can Build</h1>
-    <p>These are demo prototypes that show our approach to AI and automation. They are not tied to specific clients or results.</p>
+    <p>Explore sample projects for AI assistants, workflow automation, web development, and security reviews.</p>
   </div>
 </section>
 
-<section class="section">
+<section class="section" id="interactive-demos" aria-labelledby="sample-heading">
   <div class="container">
+    <div class="section-header">
+      <h2 id="sample-heading">Try Our Sample Projects</h2>
+      <p>Choose a scenario to see how each solution could work. These browser demos use fictional data and simulated integrations.</p>
+    </div>
+    <div class="card-grid grid-3">
+      <article class="card work-card sample-demo">
+        <span class="demo-cat">WhatsApp &amp; CRM</span>
+        <h3>WhatsApp Inquiry Assistant</h3>
+        <p>Try a chat flow that answers a question and prepares a CRM handoff.</p>
+        <label for="sample-0">Choose a customer message</label>
+        <select id="sample-0">
+          <option data-response="Yes, we install split AC units. What city are you in, and when would you like the installation?">Do you install air conditioners?</option>
+          <option data-response="Sample CRM record created: AC installation · Sagar · Saturday requested · Assigned to Service Sales.">Sagar, this Saturday</option>
+          <option data-response="This is an existing booking. The conversation is routed to customer support instead of creating a new sales lead.">I need to change an existing booking</option>
+        </select>
+        <div class="sample-actions">
+          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
+        </div>
+        <p class="sample-result" role="status"></p>
+      </article>
+
+      <article class="card work-card sample-demo">
+        <span class="demo-cat">Voice AI</span>
+        <h3>Hindi &amp; Hinglish Voice Assistant</h3>
+        <p>Explore sample call responses and hear them when Hindi speech is available on your device.</p>
+        <label for="sample-1">Choose a caller request</label>
+        <select id="sample-1">
+          <option data-response="नमस्ते! क्लिनिक सोमवार से शनिवार, सुबह दस से शाम छह बजे तक खुला है।">पूछें कि क्लिनिक कब खुलता है</option>
+          <option data-response="शनिवार सुबह ग्यारह बजे एक स्लॉट है। क्या आप इस समय का अपॉइंटमेंट लेना चाहेंगे?">शनिवार की अपॉइंटमेंट पूछें</option>
+          <option data-response="ठीक है, मैं आपको रिसेप्शन टीम से कनेक्ट कर रही हूँ।">Ask to speak to reception</option>
+        </select>
+        <div class="sample-actions">
+          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
+          <button class="btn btn-outline btn-sm" type="button" data-listen-demo hidden>Play reply</button>
+        </div>
+        <p class="sample-result" role="status" lang="hi"></p>
+        <p class="sample-audio-status" role="status"></p>
+      </article>
+
+      <article class="card work-card sample-demo">
+        <span class="demo-cat">Workflow Automation</span>
+        <h3>Lead Routing &amp; Follow-Up</h3>
+        <p>See how an n8n-style workflow could route new inquiries and queue follow-ups.</p>
+        <label for="sample-2">Choose a sample inquiry</label>
+        <select id="sample-2">
+          <option data-response="Website form → CRM lead created → Web team assigned → Follow-up task due tomorrow.">New website project</option>
+          <option data-response="Website form → Matched existing customer → Support ticket opened → Support team notified.">Existing customer needs help</option>
+          <option data-response="Website form → Duplicate matched → New message attached to existing lead → One follow-up task kept.">Repeat inquiry for the same project</option>
+        </select>
+        <div class="sample-actions">
+          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
+        </div>
+        <p class="sample-result" role="status"></p>
+      </article>
+
+      <article class="card work-card sample-demo">
+        <span class="demo-cat">Web Development</span>
+        <h3>Online Store &amp; Checkout</h3>
+        <p>Walk through product selection and a sample order confirmation.</p>
+        <label for="sample-3">Choose a store action</label>
+        <select id="sample-3">
+          <option data-response="Sample catalog: Desk Lamp · ₹1,499 | Notebook Set · ₹399 | Cable Organizer · ₹299.">Browse the catalog</option>
+          <option data-response="Cart: 1 × Desk Lamp at ₹1,499. Standard delivery: ₹99. Order total: ₹1,598.">Add a Desk Lamp to the cart</option>
+          <option data-response="Sample order #DEMO-104 · 1 Desk Lamp · ₹1,598 total. This preview uses mock checkout data.">Preview checkout</option>
+        </select>
+        <div class="sample-actions">
+          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
+        </div>
+        <p class="sample-result" role="status"></p>
+      </article>
+
+      <article class="card work-card sample-demo">
+        <span class="demo-cat">Security Review</span>
+        <h3>Sample Security Review Report</h3>
+        <p>Explore how a website review could turn observations into a prioritized remediation plan.</p>
+        <label for="sample-4">Choose an example finding</label>
+        <select id="sample-4">
+          <option data-response="High priority · Require multi-factor authentication for administrator accounts and review recovery access.">Administrator account protection</option>
+          <option data-response="Medium priority · Remove stale staff accounts and verify that active users have the access they need.">Access review</option>
+          <option data-response="Assign each finding to an owner, agree on a due date, and record the result when the fix is verified.">Remediation tracking</option>
+        </select>
+        <div class="sample-actions">
+          <button class="btn btn-outline btn-sm" type="button" data-run-demo>Try scenario</button>
+        </div>
+        <p class="sample-result" role="status"></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="more-demos-heading">
+  <div class="container">
+    <h2 id="more-demos-heading">More Sample Projects</h2>
     <div class="card-grid grid-3" id="workGrid">
 
       <div class="card work-card">
@@ -60,7 +164,10 @@
         <span class="demo-cat">AI Agent</span>
         <h3>AI Customer Support Chatbot</h3>
         <p>Answers common questions and routes customers to the right next step.</p>
-        <a href="#" class="btn btn-outline btn-sm" data-demo-link>View Demo</a>
+        <details class="sample-example">
+          <summary>View sample</summary>
+          <p>Customer: Can I reschedule my installation?<br>Assistant: Yes. I can show the available installation slots or connect you with support if the visit is already underway.</p>
+        </details>
       </div>
 
       <div class="card work-card">
@@ -68,7 +175,7 @@
         <span class="demo-cat">AI Agent</span>
         <h3>AI Appointment Booking Assistant</h3>
         <p>Guides customers from service selection to a confirmed appointment.</p>
-        <a href="/book" class="btn btn-outline btn-sm">View Demo</a>
+        <a href="/book" class="btn btn-outline btn-sm">Open Yutrixa Booking</a>
       </div>
 
       <div class="card work-card">
@@ -76,7 +183,10 @@
         <span class="demo-cat">AI Automation</span>
         <h3>AI Lead Qualification System</h3>
         <p>Scores and routes inbound leads based on conversation context.</p>
-        <a href="#" class="btn btn-outline btn-sm" data-demo-link>View Demo</a>
+        <details class="sample-example">
+          <summary>View sample</summary>
+          <p>Inquiry: We need appointment reminders for three branches next month.<br>Routing: High priority. Assign to the automation team and confirm which booking system the branches use.</p>
+        </details>
       </div>
 
       <div class="card work-card">
@@ -84,7 +194,10 @@
         <span class="demo-cat">Automation</span>
         <h3>Business Workflow Automation</h3>
         <p>Connects tools so information moves without manual re-entry.</p>
-        <a href="#" class="btn btn-outline btn-sm" data-demo-link>View Demo</a>
+        <details class="sample-example">
+          <summary>View sample</summary>
+          <p>Trigger: A customer approves an estimate.<br>Workflow: Create the onboarding task, update the CRM stage, and queue a welcome message.</p>
+        </details>
       </div>
 
       <div class="card work-card">
@@ -92,7 +205,10 @@
         <span class="demo-cat">AI Automation</span>
         <h3>AI Report Generator</h3>
         <p>Turns raw data into a clear, formatted summary report.</p>
-        <a href="#" class="btn btn-outline btn-sm" data-demo-link>View Demo</a>
+        <details class="sample-example">
+          <summary>View sample</summary>
+          <p>Input: 42 tickets received, 38 resolved, 4 open.<br>Weekly summary: 38 of 42 tickets resolved (90%). Review the four remaining tickets in the next team handover.</p>
+        </details>
       </div>
 
       <div class="card work-card">
@@ -100,7 +216,10 @@
         <span class="demo-cat">Automation</span>
         <h3>Automated Data Entry</h3>
         <p>Extracts and enters structured data into a system automatically.</p>
-        <a href="#" class="btn btn-outline btn-sm" data-demo-link>View Demo</a>
+        <details class="sample-example">
+          <summary>View sample</summary>
+          <p>Input: Invoice INV-204 from Sample Supplies for ₹4,500.<br>Output: Invoice number, supplier and amount extracted. Assign a reviewer before posting to accounting.</p>
+        </details>
       </div>
 
       <div class="card work-card">
@@ -108,15 +227,21 @@
         <span class="demo-cat">AI Agent</span>
         <h3>E-commerce Support Assistant</h3>
         <p>Handles order status, returns and product questions for online stores.</p>
-        <a href="#" class="btn btn-outline btn-sm" data-demo-link>View Demo</a>
+        <details class="sample-example">
+          <summary>View sample</summary>
+          <p>Customer: Where is my sample order #1042?<br>Assistant: Order #1042 is out for delivery. For a return, select the item and I’ll show its eligibility.</p>
+        </details>
       </div>
 
       <div class="card work-card">
         <div class="work-preview"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="badge">Demo Prototype</span></div>
         <span class="demo-cat">Web Development</span>
         <h3>Business Dashboard</h3>
-        <p>A live dashboard view of key operational metrics in one place.</p>
-        <a href="#" class="btn btn-outline btn-sm" data-demo-link>View Demo</a>
+        <p>A dashboard view of key operational metrics in one place.</p>
+        <details class="sample-example">
+          <summary>View sample</summary>
+          <p>Sample week: 18 new inquiries, 7 bookings and 3 open follow-ups.<br>Dashboard view: Compare inquiries with bookings and review the open follow-ups in one place.</p>
+        </details>
       </div>
 
     </div>
@@ -173,10 +298,47 @@
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
-document.querySelectorAll('[data-demo-link]').forEach((a) => {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-    alert('This demo prototype is best experienced through our AI Assistant — click the chat button in the bottom right to try it, or visit the Book a Consultation page for the live booking assistant.');
+document.querySelectorAll('.sample-demo').forEach((demo) => {
+  const scenario = demo.querySelector('select');
+  const result = demo.querySelector('.sample-result');
+  const play = demo.querySelector('[data-listen-demo]');
+  const audioStatus = demo.querySelector('.sample-audio-status');
+
+  demo.querySelector('[data-run-demo]').addEventListener('click', () => {
+    result.textContent = scenario.selectedOptions[0].dataset.response;
+    if (play) {
+      play.hidden = false;
+      audioStatus.textContent = '';
+    }
+  });
+
+  if (!play) return;
+
+  scenario.addEventListener('change', () => {
+    result.textContent = '';
+    audioStatus.textContent = '';
+    play.hidden = true;
+    window.speechSynthesis?.cancel();
+  });
+
+  play.addEventListener('click', () => {
+    const speech = window.speechSynthesis;
+    const voice = speech?.getVoices().find((candidate) => /^hi(?:-|$)/i.test(candidate.lang));
+    if (!voice) {
+      audioStatus.textContent = 'Hindi audio is unavailable in this browser. You can read the sample reply above.';
+      return;
+    }
+
+    speech.cancel();
+    audioStatus.textContent = '';
+    const reply = new SpeechSynthesisUtterance(result.textContent);
+    reply.voice = voice;
+    reply.lang = voice.lang;
+    reply.onerror = (event) => {
+      if (event.error === 'interrupted' || event.error === 'canceled') return;
+      audioStatus.textContent = 'Audio could not play. You can read the sample reply above.';
+    };
+    speech.speak(reply);
   });
 });
 </script>
