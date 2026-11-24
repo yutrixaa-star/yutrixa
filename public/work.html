@@ -272,7 +272,7 @@
       <article class="card work-card sample-demo">
         <span class="demo-cat">Workflow Automation</span>
         <h3>Lead Routing &amp; Follow-Up</h3>
-        <p>Submit two inquiries with the same company and request to see how the workflow handles duplicates.</p>
+        <p>Route inquiries into a CRM queue, merge duplicates, and export the results.</p>
         <form id="workflow-demo">
           <label for="demo-company">Sample company</label>
           <input id="demo-company" name="company" required maxlength="60" placeholder="e.g. Demo Studio">
@@ -282,9 +282,17 @@
             <option value="automation">Automate a process</option>
             <option value="support">Get help with an existing project</option>
           </select>
+          <label for="workflow-priority">Priority</label>
+          <select id="workflow-priority" name="priority">
+            <option value="Standard">Standard</option>
+            <option value="Urgent">Urgent</option>
+          </select>
           <button class="btn btn-outline btn-sm">Run workflow</button>
+          <button class="btn btn-outline btn-sm" id="workflow-seed" type="button">Run sample batch</button>
         </form>
         <p class="demo-output" id="workflow-result" role="status">No inquiries processed yet.</p>
+        <ul id="workflow-queue" class="demo-review" aria-label="CRM queue"></ul>
+        <button class="btn btn-outline btn-sm" id="workflow-export" type="button" disabled>Download CRM CSV</button>
       </article>
 
       <article class="card work-card sample-demo">
@@ -349,6 +357,7 @@ Total: ₹4,500</textarea>
           <button class="btn btn-outline btn-sm">Generate report</button>
         </form>
         <p id="report-result" class="demo-output" role="status"></p>
+        <div id="report-trend" hidden><label for="report-rate">Resolution rate</label><meter id="report-rate" min="0" max="100" value="0"></meter><p id="report-comparison"></p></div>
       </article>
 
       <article class="card work-card sample-demo">
@@ -666,23 +675,76 @@ document.querySelectorAll('[data-support-question]').forEach((button) => {
 });
 
 const inquiries = new Map();
-const routing = {
-  website: 'CRM lead created · Web team assigned · Follow-up task queued',
-  automation: 'CRM lead created · Automation team assigned · Follow-up task queued',
-  support: 'Support ticket opened · Customer Support assigned'
-};
+const routing = {website: 'Web team', automation: 'Automation team', support: 'Customer Support'};
+
+function routeInquiry(company, request, priority) {
+  const key = JSON.stringify([company.toLowerCase().replace(/\s+/g, ' '), request]);
+  const existing = inquiries.get(key);
+  const record = existing ?? {id: inquiries.size + 1, company, request, team: routing[request], priority, messages: 0, completed: false};
+  if (priority === 'Urgent') record.priority = priority;
+  record.messages++;
+  record.completed = false;
+  inquiries.set(key, record);
+  return (existing ? 'Repeat inquiry merged into ' : 'Created ') + 'record #' + record.id + ' · ' + record.team;
+}
+
+function renderWorkflowQueue() {
+  const queue = byId('workflow-queue');
+  queue.replaceChildren();
+  for (const record of inquiries.values()) {
+    const row = document.createElement('li');
+    const action = document.createElement('button');
+    action.type = 'button';
+    action.className = 'btn btn-outline btn-sm';
+    action.textContent = record.completed ? 'Reopen follow-up' : 'Complete follow-up';
+    action.addEventListener('click', () => {
+      record.completed = !record.completed;
+      action.textContent = record.completed ? 'Reopen follow-up' : 'Complete follow-up';
+      status.textContent = record.completed ? 'Completed · ' : 'Open · ';
+    });
+    const status = document.createElement('strong');
+    status.textContent = record.completed ? 'Completed · ' : 'Open · ';
+    row.append(status, '#' + record.id + ' ' + record.company + ' · ' + record.team + ' · ' + record.priority + ' · ' + record.messages + ' inquiries ', action);
+    queue.append(row);
+  }
+  byId('workflow-export').disabled = inquiries.size === 0;
+}
+
 onDemoSubmit('workflow-demo', (data) => {
   const company = data.get('company').trim();
   if (!company) return;
-  const request = data.get('request');
-  const key = JSON.stringify([company.toLowerCase().replace(/\s+/g, ' '), request]);
-  if (inquiries.has(key)) {
-    byId('workflow-result').textContent = company + ' · Duplicate matched · Added to record #' + inquiries.get(key);
-    return;
+  byId('workflow-result').textContent = routeInquiry(company, data.get('request'), data.get('priority'));
+  renderWorkflowQueue();
+});
+
+byId('workflow-seed').addEventListener('click', () => {
+  routeInquiry('Sample Retail', 'website', 'Standard');
+  routeInquiry('Sample Clinic', 'automation', 'Standard');
+  routeInquiry('Sample Retail', 'website', 'Urgent');
+  byId('workflow-result').textContent = 'Processed three inquiries. The repeat inquiry upgraded Sample Retail’s priority to Urgent.';
+  renderWorkflowQueue();
+});
+
+function workflowCSV() {
+  const cell = (value) => {
+    const text = String(value);
+    const safe = /^[\s]*[=+@-]/.test(text) ? "'" + text : text;
+    return '"' + safe.replaceAll('"', '""') + '"';
+  };
+  const rows = [['ID', 'Company', 'Request', 'Team', 'Priority', 'Inquiries', 'Follow-up']];
+  for (const r of inquiries.values()) {
+    rows.push([r.id, r.company, r.request, r.team, r.priority, r.messages, r.completed ? 'Completed' : 'Open']);
   }
-  const record = inquiries.size + 1;
-  inquiries.set(key, record);
-  byId('workflow-result').textContent = company + ' · Record #' + record + ' · ' + routing[request];
+  return rows.map(row => row.map(cell).join(',')).join('\r\n');
+}
+
+byId('workflow-export').addEventListener('click', () => {
+  const url = URL.createObjectURL(new Blob([workflowCSV()], {type: 'text/csv;charset=utf-8'}));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'yutrixa-demo-crm.csv';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
 const catalog = {lamp: ['Desk Lamp', 1499], notebook: ['Notebook Set', 399], cable: ['Cable Organizer', 299]};
@@ -761,9 +823,16 @@ receivedTickets.addEventListener('input', () => { resolvedTickets.max = received
 onDemoSubmit('report-demo', (data) => {
   const received = Number(data.get('received'));
   const resolved = Number(data.get('resolved'));
+  byId('report-trend').hidden = !received || resolved > received;
   if (resolved > received) {
     byId('report-result').textContent = 'Resolved tickets cannot exceed received tickets.';
     return;
+  }
+  if (received) {
+    const rate = Math.round(resolved / received * 100);
+    const delta = rate - 85;
+    byId('report-rate').value = rate;
+    byId('report-comparison').textContent = delta === 0 ? 'Matches the sample target of 85%.' : Math.abs(delta) + ' percentage points ' + (delta > 0 ? 'above' : 'below') + ' the sample target of 85%.';
   }
   byId('report-result').textContent = received
     ? resolved + ' of ' + received + ' tickets resolved (' + Math.round(resolved / received * 100) + '%) · ' + (received - resolved) + ' open'
