@@ -10,6 +10,21 @@
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
+  .support-demo { display:grid; grid-template-columns:minmax(0, .8fr) minmax(0, 1.2fr); gap:clamp(1rem,4vw,3rem); align-items:center; padding:clamp(1rem,4vw,2.5rem); margin-bottom:1.5rem; border:1px solid #dce7f9; border-radius:1.5rem; background:#fff; box-shadow:0 10px 28px #17376312; scroll-margin-top:5rem; }
+  .support-demo h3 { font-size:clamp(1.7rem,3vw,2.45rem); }
+  .support-console { min-width:0; border:1px solid #dce7f9; border-radius:1rem; overflow:hidden; background:#f3f7ff; }
+  .support-console-header { padding:.65rem 1rem; color:white; background:#10294f; font-weight:700; }
+  .support-log { height:12rem; overflow:auto; display:flex; flex-direction:column; gap:.5rem; padding:.75rem; }
+  .support-log p { margin:0; padding:.45rem .65rem; border-radius:.65rem; max-width:88%; overflow-wrap:anywhere; }
+  .support-log strong { display:block; font-size:.75rem; }
+  .support-bot { align-self:start; background:#fff; color:#172c52; }
+  .support-user { align-self:end; background:#2955c9; color:white; }
+  .support-actions { display:flex; flex-wrap:wrap; gap:.35rem; padding:0 .75rem .55rem; }
+  .support-actions button { border:1px solid #afc3eb; border-radius:1rem; color:#17386f; background:white; padding:.3rem .6rem; }
+  .support-composer { display:flex; gap:.4rem; padding:.6rem .75rem; background:white; }
+  .support-composer input { min-width:0; width:100%; padding:.45rem; border:1px solid #8291aa; border-radius:.5rem; }
+  @media (max-width:650px) { .support-demo { grid-template-columns:minmax(0,1fr); } }
+
   .portfolio-hero {
     padding:clamp(3.75rem, 8vw, 7rem) 0; color:#fff;
     background:radial-gradient(ellipse at 89% 0%, #264b96, transparent 58%), #091a33;
@@ -164,6 +179,29 @@
       <h2 id="sample-heading">Try Our Sample Projects</h2>
       <p>Try these working browser demos with fictional data. The chat and voice replies follow preset rules, and CRM records and orders stay in this page.</p>
     </div>
+    <article class="support-demo" id="customer-support-demo" aria-labelledby="support-demo-title">
+      <div class="support-demo-copy">
+        <span class="demo-cat">Interactive ecommerce demo</span>
+        <h3 id="support-demo-title">Customer Support Chatbot</h3>
+        <p>Track a sample order, check whether it can be returned, or create a support ticket.</p>
+        <p>Try orders <strong>#1042</strong> and <strong>#1057</strong>. This demo uses preset replies and fictional orders.</p>
+      </div>
+      <div class="support-console">
+        <div class="support-console-header">Store Support</div>
+        <div id="support-log" class="support-log" role="log" aria-label="Chat conversation">
+          <p class="support-bot"><strong>Assistant</strong> Hi! How can I help with your order?</p>
+        </div>
+        <div class="support-actions" aria-label="Suggested questions">
+          <button type="button" data-support-question="Track order #1042">Track order</button>
+          <button type="button" data-support-question="Can I return order #1057?">Check a return</button>
+          <button type="button" data-support-question="Talk to support">Talk to support</button>
+        </div>
+        <form id="support-demo-form" class="support-composer">
+          <input id="support-message" name="message" aria-label="Message to store support" placeholder="Type a message" maxlength="160" required autocomplete="off">
+          <button class="btn btn-primary btn-sm" type="submit">Send</button>
+        </form>
+      </div>
+    </article>
     <div class="portfolio-demos">
       <article class="card work-card sample-demo">
         <span class="demo-cat">WhatsApp &amp; CRM</span>
@@ -257,12 +295,9 @@
       <div class="card work-card">
         <div class="work-preview"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/></svg><span class="badge">Demo Prototype</span></div>
         <span class="demo-cat">AI Agent</span>
-        <h3>AI Customer Support Chatbot</h3>
+        <h3>Customer Support Chatbot</h3>
         <p>Answers common questions and routes customers to the right next step.</p>
-        <details class="sample-example">
-          <summary>View sample</summary>
-          <p>Customer: Can I reschedule my installation?<br>Assistant: Yes. I can show the available installation slots or connect you with support if the visit is already underway.</p>
-        </details>
+        <a href="#customer-support-demo" class="btn btn-outline btn-sm">Try the Support Chatbot</a>
       </div>
 
       <div class="card work-card">
@@ -469,6 +504,58 @@ byId('speak-demo').addEventListener('click', () => {
     if (error !== 'interrupted' && error !== 'canceled') status.textContent = 'Audio could not play. The reply is shown above.';
   };
   speech.speak(reply);
+});
+
+const supportOrders = {
+  '1042': {status: 'Order #1042 is out for delivery and is expected by 6 PM today.', returnStatus: 'A return can be requested after order #1042 is delivered.'},
+  '1057': {status: 'Order #1057 was delivered yesterday.', returnStatus: 'Order #1057 is eligible for a return within 14 days of delivery.'}
+};
+let supportIntent = '';
+let supportTicket = 100;
+
+function addSupportMessage(role, message) {
+  const log = byId('support-log');
+  const line = document.createElement('p');
+  const label = document.createElement('strong');
+  label.textContent = role === 'user' ? 'You' : 'Assistant';
+  line.className = 'support-' + role;
+  line.append(label, message);
+  log.append(line);
+  log.scrollTop = log.scrollHeight;
+}
+
+function sendSupportMessage(rawMessage) {
+  const message = rawMessage.trim();
+  if (!message) return;
+  addSupportMessage('user', message);
+  const number = message.match(/\b\d{4,}\b/)?.[0];
+  let reply;
+  if (/human|agent|ticket|talk to|speak to|contact support/i.test(message)) {
+    supportIntent = '';
+    reply = 'Sample ticket SUP-' + (++supportTicket) + ' created. In a live store, the support team would receive the conversation.';
+  } else {
+    if (/return|refund/i.test(message)) supportIntent = 'returnStatus';
+    else if (/track|status|delivery|where.*order/i.test(message)) supportIntent = 'status';
+    if (number && Object.hasOwn(supportOrders, number)) {
+      reply = supportOrders[number][supportIntent || 'status'];
+      supportIntent = '';
+    } else if (number) {
+      reply = 'I couldn’t find that sample order. Try #1042 or #1057.';
+    } else if (supportIntent) {
+      reply = 'What’s your order number? You can try #1042 or #1057.';
+    } else {
+      reply = 'I can track a sample order, check return eligibility, or create a support ticket.';
+    }
+  }
+  addSupportMessage('bot', reply);
+}
+
+onDemoSubmit('support-demo-form', (data) => {
+  sendSupportMessage(data.get('message'));
+  byId('support-message').value = '';
+});
+document.querySelectorAll('[data-support-question]').forEach((button) => {
+  button.addEventListener('click', () => sendSupportMessage(button.dataset.supportQuestion));
 });
 
 const inquiries = new Map();
