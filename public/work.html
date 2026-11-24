@@ -10,12 +10,58 @@
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
-  .featured-work { display:grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap:clamp(1rem, 4vw, 3rem); align-items:start; }
-  .featured-work-flow { border-inline-start:3px solid #657fde; padding-inline-start:1rem; }
-  .featured-work-flow ol { padding-inline-start:1.35rem; margin-block:.75rem 0; }
-  .featured-work-flow li + li { margin-block-start:.6rem; }
-  .featured-work .featured-work-note { font-size:.9rem; margin-block:.75rem 0; }
-  @media (max-width: 720px) { .featured-work { grid-template-columns:minmax(0, 1fr); } }
+  .portfolio-hero {
+    padding:clamp(3.75rem, 8vw, 7rem) 0; color:#fff;
+    background:radial-gradient(ellipse at 89% 0%, #264b96, transparent 58%), #091a33;
+  }
+  .portfolio-hero .eyebrow { color:#b8cdff; }
+  .portfolio-hero h1 { color:#fff; font-size:clamp(2.7rem, 7vw, 5.5rem); line-height:1.02; letter-spacing:-.055em; margin:.25em 0; }
+  .portfolio-hero h1 span { color:#aec5ff; }
+  .portfolio-hero p { max-width:34rem; color:#d9e5f8; margin-bottom:1.6rem; }
+  .portfolio-hero-link { display:inline-block; padding:.7rem .75rem; font-weight:700; color:#e3ebff; }
+  .portfolio-hero-link:hover { text-decoration:underline; }
+  .portfolio-spotlight { padding:clamp(2rem, 6vw, 4.5rem) 0 0; background:#f3f7ff; }
+  #featured-project, #interactive-demos { scroll-margin-top:5rem; }
+  .featured-work {
+    display:grid; grid-template-columns:minmax(0, .95fr) minmax(0, 1.05fr); align-items:center;
+    gap:clamp(1.25rem, 5vw, 4rem); padding:clamp(1rem, 4vw, 3rem);
+    border:1px solid #dce7f9; border-radius:1.5rem; background:#fff; box-shadow:0 16px 45px #17376312;
+  }
+  .portfolio-live-dot { display:inline-block; width:.55rem; height:.55rem; border-radius:50%; background:#16805b; }
+  .featured-work h2 { max-width:16ch; margin-top:.35em; }
+  .featured-work-note { font-size:.875rem; margin:.7rem 0 0; }
+  .portfolio-preview {
+    min-width:0; margin:0; padding:clamp(.7rem, 3vw, 2rem); background:#10294f;
+    background-image:radial-gradient(ellipse at top right, #315daf, transparent 75%); border-radius:1.15rem;
+  }
+  .portfolio-preview figcaption { color:#d9e6ff; font-size:.75rem; margin-top:.65rem; text-align:center; }
+  .portfolio-window { border-radius:.8rem; overflow:hidden; background:#f8faff; color:#132342; box-shadow:0 12px 35px #020d2e60; }
+  .portfolio-window-bar { display:flex; align-items:center; gap:.28rem; padding:.65rem; background:#e4ecfb; }
+  .portfolio-window-bar span { width:.35rem; height:.35rem; background:#8096bb; border-radius:50%; flex:none; }
+  .portfolio-window-bar strong { font-size:.7rem; margin-inline-start:.4rem; }
+  .portfolio-window-body { display:grid; grid-template-columns:minmax(0, 1.3fr) minmax(0, 1fr); gap:.7rem; padding:.75rem; font-size:.72rem; }
+  .portfolio-preview-chat, .portfolio-preview-slots { display:grid; gap:.4rem; align-content:start; }
+  .portfolio-preview-chat div, .portfolio-preview-slots span { padding:.38rem .5rem; border-radius:.4rem; background:#e9effa; }
+  .portfolio-preview-chat .portfolio-preview-reply, .portfolio-preview-slots .portfolio-preview-selected { color:#fff; background:#2955c9; }
+  .portfolio-preview-reply { justify-self:end; }
+  .portfolio-preview-slots span { text-align:center; }
+  #interactive-demos { background:linear-gradient(#f3f7ff, #fff 62%); }
+  .portfolio-demos { display:grid; grid-template-columns:repeat(6, minmax(0, 1fr)); gap:1.15rem; }
+  .portfolio-demos .sample-demo {
+    grid-column:span 2; min-width:0; border:1px solid #dae5f6; padding:clamp(1rem, 2vw, 1.6rem);
+    background:linear-gradient(#eff5ff 0, #fff 7rem); border-radius:1.15rem; box-shadow:0 6px 22px #1737630d;
+  }
+  .portfolio-demos .sample-demo:nth-child(-n+2) { grid-column:span 3; }
+  .portfolio-demos .demo-cat { margin-bottom:.55rem; }
+  .portfolio-demos .sample-demo .demo-output:not(:empty) { background:#edf3ff; border-radius:.35rem; padding:.65rem; }
+  @media (max-width: 860px) {
+    .portfolio-demos { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .portfolio-demos .sample-demo:nth-child(n) { grid-column:auto; }
+  }
+  @media (max-width: 650px) {
+    .featured-work, .portfolio-demos { grid-template-columns:minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
   .sample-demo form { margin-block-end:.75rem; }
   .sample-demo select, .sample-demo input:not([type=checkbox]) {
     display:block; width:100%; padding:.65rem; margin-block-end:.75rem; border:1px solid #8291aa;
@@ -70,33 +116,44 @@
 
 <main>
 
-<section class="page-hero">
+<section class="portfolio-hero" aria-labelledby="portfolio-title">
   <div class="container">
-    <div class="eyebrow">Portfolio</div>
-    <h1>See What We Can Build</h1>
-    <p>Explore sample projects for AI assistants, workflow automation, web development, and security reviews.</p>
+    <div class="eyebrow">Yutrixa Portfolio</div>
+    <h1 id="portfolio-title">See what we build.<br><span>Try it yourself.</span></h1>
+    <p>Explore our live booking assistant and try hands-on demos for customer support, automation, ecommerce, and more.</p>
+    <a href="#featured-project" class="btn btn-primary">See the Live Project</a>
+    <a href="#interactive-demos" class="portfolio-hero-link">Explore the Demos <span aria-hidden="true">↓</span></a>
   </div>
 </section>
 
-
-<section class="section section-alt" aria-labelledby="featured-work-heading">
+<section class="portfolio-spotlight" id="featured-project" aria-labelledby="featured-work-heading">
   <div class="container">
-    <article class="card featured-work">
-      <div>
-        <div class="eyebrow">Live project · Built for Yutrixa</div>
-        <h2 id="featured-work-heading">Our Consultation Booking Assistant</h2>
-        <p>We built this for our own website so visitors can choose a service and find a consultation time without emailing back and forth.</p>
-        <a href="/book" class="btn btn-primary">Try the Live Booking Flow</a>
-        <p class="featured-work-note">You can explore services and available times before entering your details or confirming an appointment.</p>
+    <article class="featured-work">
+      <div class="featured-work-copy">
+        <div class="eyebrow"><span class="portfolio-live-dot" aria-hidden="true"></span> Live on Yutrixa</div>
+        <h2 id="featured-work-heading">Consultation Booking Assistant</h2>
+        <p>We built this for our own site so visitors can choose a service, see available times, and book a consultation without emailing back and forth.</p>
+        <a href="/book" class="btn btn-primary">Try the Live Booking Flow <span aria-hidden="true">↗</span></a>
+        <p class="featured-work-note">Browse times before sharing your details.</p>
       </div>
-      <div class="featured-work-flow">
-        <h3>What you can try</h3>
-        <ol>
-          <li><strong>Choose a service.</strong> The chat guides you to the calendar.</li>
-          <li><strong>Pick a date.</strong> See available time slots for that day.</li>
-          <li><strong>Review your selection.</strong> A booking is created when you submit your details and confirm.</li>
-        </ol>
-      </div>
+      <figure class="portfolio-preview">
+        <div class="portfolio-window" aria-hidden="true">
+          <div class="portfolio-window-bar"><span></span><span></span><span></span><strong>yutrixa.com/book</strong></div>
+          <div class="portfolio-window-body">
+            <div class="portfolio-preview-chat">
+              <strong>Booking assistant</strong>
+              <div>What can we help you with?</div>
+              <div class="portfolio-preview-reply">AI Automation</div>
+              <div>Great. Choose a time that works for you.</div>
+            </div>
+            <div class="portfolio-preview-slots">
+              <strong>Choose a time</strong>
+              <span>10:30 AM</span><span class="portfolio-preview-selected">11:00 AM</span><span>2:00 PM</span>
+            </div>
+          </div>
+        </div>
+        <figcaption>Illustration of the booking flow with sample times</figcaption>
+      </figure>
     </article>
   </div>
 </section>
@@ -107,7 +164,7 @@
       <h2 id="sample-heading">Try Our Sample Projects</h2>
       <p>Try these working browser demos with fictional data. The chat and voice replies follow preset rules, and CRM records and orders stay in this page.</p>
     </div>
-    <div class="card-grid grid-3">
+    <div class="portfolio-demos">
       <article class="card work-card sample-demo">
         <span class="demo-cat">WhatsApp &amp; CRM</span>
         <h3>WhatsApp Inquiry Assistant</h3>
